@@ -8,7 +8,7 @@
 
 **Contact:** 206.685.3846, zhaobo@uw.edu, jakobzhao (skype/wechat)
 
-In this practical exercise, you are expected to use Natural Language Processing to explore a book author's sense of place about Seattle. Natural Language Processing (NLP), as a typical machine learning algorithm, aims to inteprete the context of a large text corpora with the support from computers. Obviously, NLP can learn a large amount of text with ease, and can summarize its major context using multiple functions and analyses. Sense of place indicates an individual's perception, emotion, or altitude towards a place. If an individual has recorded one's sense of place, it is possible to interprete the author's sense of place to process the record using NLP. Below, we will explore Gary L. Atkins's sense of place about Seattle using NLP to process his book entitled *Gay Seattle*. Specificially, we plan to explore multiple perspectives of Gary's sense of place. For example, we would like to get a general picture about his impression of Seaettle using word cloud, and then plot the spatial dimension of Gary's perception of `Seattle`, and then try to visualize Gary's sense of palce using network analysis. Let us get started!
+In this practical exercise, you are expected to use Natural Language Processing to explore a book author's sense of place about Seattle. Natural Language Processing (NLP), as a typical machine learning algorithm, aims to inteprete the context of a large text corpora with the support from computers. Obviously, NLP can learn a large amount of text with ease, and can summarize its major context using multiple functions and analyses. Sense of place indicates an individual's perception, emotion, or altitude towards a place. If an individual has recorded one's sense of place, it is possible to interprete the author's sense of place to process the record using NLP. Below, we will explore Gary L. Atkins's sense of place about Seattle using NLP to process his book entitled _Gay Seattle_. Specificially, we plan to explore multiple perspectives of Gary's sense of place. For example, we would like to get a general picture about his impression of Seaettle using word cloud, and then plot the spatial dimension of Gary's perception of `Seattle`, and then try to visualize Gary's sense of palce using network analysis. Let us get started!
 
 ## 1.  Environment Setup
 
@@ -43,14 +43,14 @@ To make sure NLTK run property, you need to download the NLTK corpora dataset. R
 In addition to configure the python environment, please also install `Gephi` and `QGIS 3` for the geospatial data visualizatins and you might need to install Java runtime to initiate `tika`.
 
 > Gephi is an open-source network analysis and visualization software package written in Java on the NetBeans platform. Gephi has been used in a number of research projects in academia, journalism and elsewhere, for instance in visualizing the global connectivity of New York Times content and examining Twitter network traffic during social unrest along with more traditional network analysis topics. Gephi is widely used within the digital humanities (in history, literature, political sciences, etc.), a community where many of its developers are involved.
-
+>
 > QGIS functions as geographic information system (GIS) software, allowing users to analyze and edit spatial information, in addition to composing and exporting graphical maps. QGIS supports both raster and vector layers; vector data is stored as either point, line, or polygon features. Multiple formats of raster images are supported, and the software can georeference images.
-QGIS integrates with other open-source GIS packages, including PostGIS, GRASS GIS, and MapServer. Plugins written in Python or C++ extend QGIS's capabilities. Plugins can geocode using the Google Geocoding API, perform geoprocessing functions similar to those of the standard tools found in ArcGIS, and interface with PostgreSQL/PostGIS, SpatiaLite and MySQL databases.
-
+>
+> QGIS integrates with other open-source GIS packages, including PostGIS, GRASS GIS, and MapServer. Plugins written in Python or C++ extend QGIS's capabilities. Plugins can geocode using the Google Geocoding API, perform geoprocessing functions similar to those of the standard tools found in ArcGIS, and interface with PostgreSQL/PostGIS, SpatiaLite and MySQL databases.
 
 ## 2. Reading and Preprocessing PDF files
 
-<img src="img/gbook.png" width="150px" align="right" /> In this section, we need to read all the pdf files of the book *Gay Seattle*, please download all the pdf files from the Google drive and store them in the folder named as `gay-seattle` under the `assets` folder. Also, create another folder called `delFrontPage` under the same folder. After migrating files, we need to delete the front page of each pdf file since this page, containing the meta data of the pdf file, is irrelevant to the maintext of this book. Then, the python script recognizes the text of each pdf file using a python library `pika`. In the end, all the text will be stored in an text file named `gay-seattle.txt`.
+<img src="img/gbook.png" width="150px" align="right" /> In this section, we need to read all the pdf files of the book _Gay Seattle_, please download all the pdf files from the Google drive and store them in the folder named as `gay-seattle` under the `assets` folder. Also, create another folder called `delFrontPage` under the same folder. After migrating files, we need to delete the front page of each pdf file since this page, containing the meta data of the pdf file, is irrelevant to the maintext of this book. Then, the python script recognizes the text of each pdf file using a python library `pika`. In the end, all the text will be stored in an text file named `gay-seattle.txt`.
 
 ### 010_text_reader.py
 
@@ -86,16 +86,17 @@ Now we have text data extracted and stored in `gay-seattle.txt`. Before we start
 ### 020_text_preprocess.py
 
 When treating texts as data, it is important to preprocess the texts. Some of the major tasks for preprocessing include:
-- Homogenizing texts:
-  - convert all the characters to lowercase
-  - remove all the line breaks (line breaks does not provide much information)
-  - remove punctuations
-- Tokenization: split the text into chunks:
-  - words, tokens, letters, ...
-- Stemming: remove common suffixes/prefixes
-  - -ed (jumped → jump), -ing (dancing → danc)
-- Lemmatization: convert words into lemmas (dictionary form)
-  - dancing → dance
+
+-   Homogenizing texts:
+    -   convert all the characters to lowercase
+    -   remove all the line breaks (line breaks does not provide much information)
+    -   remove punctuations
+-   Tokenization: split the text into chunks:
+    -   words, tokens, letters, ...
+-   Stemming: remove common suffixes/prefixes
+    -   \-ed (jumped → jump), -ing (dancing → danc)
+-   Lemmatization: convert words into lemmas (dictionary form)
+    -   dancing → dance
 
 These techniques are widely applied in the field of machine learning such as `supervised learning` and `k-nearest neighbors algorithm`. In a similar fashion, we are going to preprocess our text data through this tutorial.
 
@@ -112,6 +113,7 @@ We also need to convert all the letters to lowercase. This is because during tex
 # Convert text to lowercase
 txt = txt.lower()
 ```
+
 ####030_model_builder.py
 
 Now we have preprocessed data ready to use. Before we can create language model for natural language processing, we need to remove unwanted characters and words from our text data. This includes non-letters and stop words (`the`, `is`, `not`, etc...).
@@ -138,9 +140,10 @@ def review_to_wordlist(review, remove_stopwords=False):
     # 5. Return a list of words
     return words
 ```
+
 After that, we will tokenize each sentences as well as each words using tokenizer provided by NLTK module.
 
->Word tokenization is the process of splitting a large sample of text into words. This is a requirement in natural language processing tasks where each word needs to be captured and subjected to further analysis like classifying and counting them for a particular sentiment etc.
+> Word tokenization is the process of splitting a large sample of text into words. This is a requirement in natural language processing tasks where each word needs to be captured and subjected to further analysis like classifying and counting them for a particular sentiment etc.
 
 ```Python
 # Define a function to split a review into parsed sentences
@@ -164,9 +167,10 @@ def review_to_sentences(review, tokenizer, remove_stopwords=False):
     # so this returns a list of lists
     return sentences
 ```
+
 Finally, we can train our own language model using the data we have been preparing. We will also save the created model for later use. This language model is created using a technique called word embeddings.  Here, we are using a word embedding mode3l called `word2vec`, provided by google.
 
->Word Embedding is a type of word representation that allows words with similar meaning to be understood by machine learning algorithms. Technically speaking, it is a mapping of words into vectors of real numbers using the neural network, probabilistic model, or dimension reduction on word co-occurrence matrix. It is language modeling and feature learning technique. Word embedding is a way to perform mapping using a neural network. There are various word embedding models available such as word2vec (Google), Glove (Stanford) and fastest (Facebook).
+> Word Embedding is a type of word representation that allows words with similar meaning to be understood by machine learning algorithms. Technically speaking, it is a mapping of words into vectors of real numbers using the neural network, probabilistic model, or dimension reduction on word co-occurrence matrix. It is language modeling and feature learning technique. Word embedding is a way to perform mapping using a neural network. There are various word embedding models available such as word2vec (Google), Glove (Stanford) and fastest (Facebook).
 
 ```Python
 # train a model
@@ -175,6 +179,7 @@ Finally, we can train our own language model using the data we have been prepari
     model.save(modelPath)
     print("completed!")
 ```
+
 ####031_model_test.py
 
 Now, with the model we have created, we can get a list of words that are closer to 'seattle' or get a similarity distance between words of your choice.
@@ -186,15 +191,16 @@ model = Word2Vec.load("assets/gay-seattle.w2v")
 print("seattle", model.wv.most_similar('seattle', topn=50))
 print(model.wv.distances('seattle', ('news', 'june', 'times', 'march')))
 ```
+
 Carefully examine what words appears and think about why these words are the 'closest' words. One reason why month (June, March, etc...) appears as close word to `Seattle` is because they appear in sentences in similar ways. For example, the sentence might look like "... in Seattle", "... in June" or "Seattle is ...", "June is ...". Since word2vec captures their locations in a sentence, parts of speech of words play an important role in generating the similarity score using word2vec and other word embedding models. You may change the input word to see what kind of words are closer each other.
 
 ## 3. Making a Wordcloud
 
-#### 040_word_cloud_creator.py
+### 040_word_cloud_creator.py
 
 Now let's visualize the context of our data using word frequencies and word cloud. As well as natural Language processing, creating word cloud is one of the efficient ways to understand contextual meaning of text data that are too lengthy for humans to read.
 
->A tag cloud (word cloud or wordle or weighted list in visual design) is a novelty visual representation of text data, typically used to depict keyword metadata (tags) on websites, or to visualize free form text. Tags are usually single words, and the importance of each tag is shown with font size or color. This format is useful for quickly perceiving the most prominent terms to determine its relative prominence.
+> A tag cloud (word cloud or wordle or weighted list in visual design) is a novelty visual representation of text data, typically used to depict keyword metadata (tags) on websites, or to visualize free form text. Tags are usually single words, and the importance of each tag is shown with font size or color. This format is useful for quickly perceiving the most prominent terms to determine its relative prominence.
 
 In previous part, we have preprocessed our text data, but we need a bit more of cleaning our data. We will remove punctuations and numbers from our text, because we do not want to include them in our wordcloud.
 
@@ -240,6 +246,7 @@ filtered_fDist = nltk.FreqDist(dict((word, freq) for word, freq in fDist.items()
 print(filtered_fDist)
 filtered_fDist.plot(20)
 ```
+
 Here is a preview of the word frequency graph we obtained:
 
 ![](img/freqDist.png)
@@ -256,6 +263,7 @@ wc.generate_from_frequencies(filtered_fDist)
 wc.to_file(wcPath)
 print("completed!")
 ```
+
 The generated word cloud image is saved in `img` folder with file name `gay-seattle.png`. Here is the preview. We now have a better sense of what the context of this book is about. Although this is just showing us how frequent each word appears in relation to others, we can have a sense that this book talks a lot about `gay`, `lesbian`, as well as related topics such as `police`, `homosexuals` and `aids`.
 
 ![](img/gay-seattle.png)
@@ -302,6 +310,7 @@ print("lemmatized data: ", lemma_sent)
 processedTxt = " ".join(lemma_sent)
 processedDoc = nlp(processedTxt)
 ```
+
 `spaCy` provides a nice feature called entity detection, which tells us what entity each term belongs to. For example, 'John' is a person, 'supreme court' is an organization, and 'seattle' is a place. When we created our NLP object, each words are already tagged according to their entity. We are only interested in locations and places, which are tagged `GPE`, which refer to geopolitical entity. We will extract such vocabularies from our text.
 
 ```Python
@@ -311,7 +320,9 @@ for ent in processedDoc.ents:
     if ent.label_ == "GPE":
         geoTxt += ent.text.replace(" ", "") + " "
 ```
+
 Then, we tokenize and save the calculated word frequencies to `gay-seattle-places.csv` for geocoding.
+
 ```Python
 tokens = nltk.tokenize.word_tokenize(geoTxt)
 fDist = FreqDist(tokens)
@@ -325,7 +336,7 @@ with open("assets/gay-seattle-places.csv", "w", encoding="utf8") as fp:
 print("finished!")
 ```
 
-####052_geocoding.py
+### 052_geocoding.py
 Geocoding means to provide geographical coordinates corresponding to a location. With location names extracted from text, we can perform geocoding to get their corresponding longitude and latitude. `geocoder` module provide a free geocoding tool without having users provide API keys.
 
 ```Python
@@ -346,7 +357,6 @@ with open("assets/gay-seattle-places-geocoded.csv", "w", encoding="utf8") as geo
             except:
                 pass
 print("finished!")
-
 ```
 
 Now we have location data stored in a file named `gay-seattle-places-geocoded.csv` under `assets` folder. In next step, we will project each data point with longitude and latitude onto a map using mapping tool called QGIS. If you do not have QGIS installed, you can download it from [here](https://qgis.org/en/site/forusers/download.html).
@@ -409,6 +419,7 @@ commonwords = {"time", "one", "began", "among", "another", "see", "part", "many"
                "well", "members", "us", "say", "s"}
 stopwords.update(commonwords)
 ```
+
 Then, we remove the updated stopwords and tokenize the text.
 
 ```Python
@@ -521,7 +532,7 @@ This map shows how each words are tightly connected within the text that we have
 
 ### 061_wordembedments.py
 
-Finally, we are going to visualize the word embeddings. The word embeddings made by the model can be visualized by reducing dimensionality of the words to 2 dimensions using tSNE. More details on how this is done can be found at https://radimrehurek.com/gensim/auto_examples/tutorials/run_word2vec.html#sphx-glr-auto-examples-tutorials-run-word2vec-py.
+Finally, we are going to visualize the word embeddings. The word embeddings made by the model can be visualized by reducing dimensionality of the words to 2 dimensions using tSNE. More details on how this is done can be found at <https://radimrehurek.com/gensim/auto_examples/tutorials/run_word2vec.html#sphx-glr-auto-examples-tutorials-run-word2vec-py>.
 
 > T-distributed Stochastic Neighbor Embedding (t-SNE) is a machine learning algorithm for visualization developed by Laurens van der Maaten and Geoffrey Hinton. It is a nonlinear dimensionality reduction technique well-suited for embedding high-dimensional data for visualization in a low-dimensional space of two or three dimensions. Specifically, it models each high-dimensional object by a two- or three-dimensional point in such a way that similar objects are modeled by nearby points and dissimilar objects are modeled by distant points with high probability.
 
@@ -631,20 +642,20 @@ To submit your deliverable, please create a new github repository, and submit th
     │      datasets you saved
 ```
 
-
 Here are the grading criteria:
 
-1\. Execute from `010_text_reader.py` to `062_word_vis.py` with the same data used in tutorial. Save your data under folder of your choice. The generated data will be later used to compare with the data generated using `native-seattle` files. (POINT 15)
+1.  Execute from `010_text_reader.py` to `062_word_vis.py` with the same data used in tutorial. Save your data under folder of your choice. The generated data will be later used to compare with the data generated using `native-seattle` files. (POINT 15)
 
-2\. Execute from `010_text_reader.py` to `040_word_cloud_creator.py` with downloaded `native-seattle` data. After this, you are required to complete one of the followings with `native-seattle` data: `4. Spatial dimension of sense of place`, `5. Social Network analysis`, or `6. Word Embeddings`. Save newly created data with reasonable file names under folder of your choice. (POINT 15)
+2.  Execute from `010_text_reader.py` to `040_word_cloud_creator.py` with downloaded `native-seattle` data. After this, you are required to complete one of the followings with `native-seattle` data: `4. Spatial dimension of sense of place`, `5. Social Network analysis`, or `6. Word Embeddings`. Save newly created data with reasonable file names under folder of your choice. (POINT 15)
 
-3\. In the `readme.md` file, write a summary of your result, as well as the comparison between the two books. (POINT 20)
+3.  In the `readme.md` file, write a summary of your result, as well as the comparison between the two books. (POINT 20)
 
-[Here](https://github.com/jouho/Place-context-analysis-using-NLP) is an example of my analysis using the techniques above. 
+[Here](https://github.com/jouho/Place-context-analysis-using-NLP) is an example of my analysis using the techniques above.
 
-**Note:** Lab assignments are required to be submitted electronically to Canvas unless stated otherwise. Efforts will be made to have them graded and returned within one week after they are submitted. Lab assignments are expected to be completed by the due date. ***A late penalty of at least 10 percentage units will be taken off each day after the due date.*** If you have a genuine reason(known medical condition, a pile-up of due assignments on other courses, ROTC, athletics teams, job interview, religious obligations etc.) for being unable to complete work on time, then some flexibility is possible. However, if in my judgment you could reasonably have let me know beforehand that there would likely be a delay, and then a late penalty will still be imposed if I don't hear from you until after the deadline has passed. For unforeseeable problems, I can be more flexible. If there are ongoing medical, personal, or other issues that are likely to affect your work all semester, then please arrange to see me to discuss the situation. There will be NO make-up exams except for circumstances like those above.
+**Note:** Lab assignments are required to be submitted electronically to Canvas unless stated otherwise. Efforts will be made to have them graded and returned within one week after they are submitted. Lab assignments are expected to be completed by the due date. **_A late penalty of at least 10 percentage units will be taken off each day after the due date._** If you have a genuine reason(known medical condition, a pile-up of due assignments on other courses, ROTC, athletics teams, job interview, religious obligations etc.) for being unable to complete work on time, then some flexibility is possible. However, if in my judgment you could reasonably have let me know beforehand that there would likely be a delay, and then a late penalty will still be imposed if I don't hear from you until after the deadline has passed. For unforeseeable problems, I can be more flexible. If there are ongoing medical, personal, or other issues that are likely to affect your work all semester, then please arrange to see me to discuss the situation. There will be NO make-up exams except for circumstances like those above.
 
 ## References
-* Thrush, C., 2017. Native Seattle: Histories from the crossing-over place. Accessed from https://muse.jhu.edu/book/10411. University of Washington Press.
 
-* Atkins, G., 2011. Gay Seattle: Stories of exile and belonging. Accessed from https://muse.jhu.edu/book/40703. University of Washington Press.
+-   Thrush, C., 2017. Native Seattle: Histories from the crossing-over place. Accessed from <https://muse.jhu.edu/book/10411>. University of Washington Press.
+
+-   Atkins, G., 2011. Gay Seattle: Stories of exile and belonging. Accessed from <https://muse.jhu.edu/book/40703>. University of Washington Press.
